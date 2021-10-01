@@ -1,3 +1,3 @@
 # IMPORTANT
-## Copier `/node_modules/monaco-editor/` vers `/Dist``
+## Copier `/node_modules/monaco-editor/` vers `/Dist`
 
