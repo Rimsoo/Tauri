@@ -46,7 +46,7 @@ const getAllFiles = function(dirPath) {
 		getAllFiles(getFilePath(dirPath))
 	  })
 
-	if(actualFile)
+	if(dirPath)
 		fileDiv.appendChild(upSide)
 	files = fs.readDir(dirPath)
 	
