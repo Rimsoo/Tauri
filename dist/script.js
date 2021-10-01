@@ -1,6 +1,21 @@
 const fs = window.__TAURI__.fs
 const path = window.__TAURI__.path
 const win = window.__TAURI__.window
+const dialog = window.__TAURI__.dialog
+var actualFile = ""
+
+document.addEventListener('keydown', e => {
+	if (e.ctrlKey ) {
+		if(e.key === 'S'|| !actualFile)
+	  		dialog.save().then(path => { 
+				  fs.writeFile({contents: editor.getValue(), path: path}) 
+				  getAllFiles(getFilePath(path))
+				  readFile(path)
+				})
+		else if(e.key === 's')
+			fs.writeFile({contents: editor.getValue(), path: actualFile})
+	}
+});
 
 function getFilePath(file) {
 	return file.substring(0, file.lastIndexOf("/"))
@@ -15,7 +30,7 @@ function readFile(filePath)
 		  undefined, 
 		  monaco.Uri.file(filePath) 
 		)
-		
+		actualFile = filePath
 		editor.setModel(model)
 	  })
 }
@@ -31,7 +46,8 @@ const getAllFiles = function(dirPath) {
 		getAllFiles(getFilePath(dirPath))
 	  })
 
-	fileDiv.appendChild(upSide)
+	if(actualFile)
+		fileDiv.appendChild(upSide)
 	files = fs.readDir(dirPath)
 	
 	files.then(res => {
@@ -65,4 +81,6 @@ if(urlParams.get('file'))
 	readFile(urlParams.get('file'))
 }	
 else
-	path.homeDir().then(res => getAllFiles(res))
+{
+	dialog.open({ directory: true }).then(res => getAllFiles(res))
+}
